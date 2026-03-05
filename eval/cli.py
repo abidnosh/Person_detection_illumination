@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 import argparse
+
 
 def build_argparser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser()
@@ -19,6 +21,18 @@ def build_argparser() -> argparse.ArgumentParser:
 
     ap.add_argument("--batch_size", type=int, default=8)
     ap.add_argument("--max_dets", type=int, default=300)
-    ap.add_argument("--min_score_cache", type=float, default=0.001)
+    ap.add_argument(
+        "--min_score_cache",
+        type=float,
+        default=0.001,
+        help="Minimum score kept in cache. Lower keeps more dets (more memory), higher saves memory.",
+    )
+    ap.add_argument("--enhance_low_conf", action="store_true")
+    ap.add_argument("--low_conf_thr", type=float, default=0.20)
+    ap.add_argument("--enhance_steps", default="grayworld,clahe")  # example default
+    ap.add_argument("--save_enhanced_dir", default="", help="If set, saves enhanced samples here.")
+    ap.add_argument("--save_enhanced_max", type=int, default=50, help="Max images to save.")
+    ap.add_argument("--save_enhanced_every", type=int, default=50, help="Save 1 out of N enhanced images.")
+    ap.add_argument("--save_enhanced_side_by_side", action="store_true", help="Save original|enhanced collage.")
     ap.add_argument("--save_json", default="")
     return ap

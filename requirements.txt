@@ -1,0 +1,14 @@
+# requirements.txt
+# Core eval runtime
+numpy>=1.23
+pillow>=9.5
+tqdm>=4.65
+
+# PyTorch (install the right build for your platform separately if needed)
+torch>=2.1
+
+# HuggingFace inference
+transformers>=4.40
+accelerate>=0.30
+safetensors>=0.4
+opencv-python>=4.8

@@ -1,4 +1,5 @@
 from __future__ import annotations
+from .utils.enhance import Enhancer, EnhancementConfig
 
 import json
 import time
@@ -44,6 +45,10 @@ def run_eval(args) -> None:
     min_score_cache = max(0.0, required_min_score)
 
     t0 = time.perf_counter()
+    enhancer = None
+    if args.enhance_low_conf:
+        steps = [s.strip() for s in args.enhance_steps.split(",") if s.strip()]
+        enhancer = Enhancer(EnhancementConfig(steps=steps))
     cache: Dict[str, CacheEntry] = build_pred_cache(
         images=images,
         gt_index=gt_index,
@@ -53,6 +58,14 @@ def run_eval(args) -> None:
         batch_size=int(args.batch_size),
         max_dets=int(args.max_dets),
         min_score_cache=float(min_score_cache),
+        enhance_low_conf=bool(args.enhance_low_conf),
+        low_conf_thr=float(args.low_conf_thr),
+        enhancer=enhancer,  
+        gate_score_thr=args.score_thr,  # only enhance if below operating point score thr
+        save_enhanced_dir=args.save_enhanced_dir,
+        save_enhanced_max=args.save_enhanced_max,
+        save_enhanced_every=args.save_enhanced_every,
+        save_enhanced_side_by_side=args.save_enhanced_side_by_side,
     )
     t1 = time.perf_counter()
     print(f"[INFO] Cache built for {len(cache)} images in {(t1 - t0):.1f}s", flush=True)
