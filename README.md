@@ -94,10 +94,15 @@ python -u eval_person_val.py \
   --sweep "0.05:0.95:0.05" \
   --save_json outputs/calib_all_val_deformable_detr.json
 ```
+--model_name PekingU/rtdetr_v2_r50vd
 
 > For *test*, just pass a test list file via `--list_file` and choose a matching output json name.
 
----
+For different models the following examples can be used.
+--backend hf --model_name SenseTime/deformable-detr
+--backend hf --model_name PekingU/rtdetr_r50vd
+--backend tv --model_name fasterrcnn_resnet50_fpn
+--backend tv --model_name ssdlite320_mobilenet_v3_large
 
 ## CLI arguments (core)
 
