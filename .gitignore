@@ -1,2 +1,14 @@
-# Distribution / packaging
+# datasets / annotations
+bdd100k_calib*.json
+
+# debug outputs
 enhanced_debug*
+
+# images
+*.jpg
+*.png
+*.jpeg
+
+# python
+__pycache__/
+*.pyc
