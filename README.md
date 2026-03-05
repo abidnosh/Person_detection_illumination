@@ -104,6 +104,38 @@ For different models the following examples can be used.
 --backend tv --model_name fasterrcnn_resnet50_fpn
 --backend tv --model_name ssdlite320_mobilenet_v3_large
 
+#### Example commands
+HuggingFace (Deformable DETR / RT-DETR / DETR v1/v2)
+Train:
+python -u eval_person_train.py \
+  --backend hf \
+  --model_name SenseTime/deformable-detr \
+  --list_file ...train.txt \
+  --det_json ...det_train.json \
+  --device mps
+Test:
+python -u eval_person_val.py \
+  --backend hf \
+  --model_name PekingU/rtdetr_r50vd \
+  --list_file ...val.txt \
+  --det_json ...det_val.json \
+  --device mps
+
+Torchvision (RetinaNet / SSD / SSD Lite / Faster R-CNN)
+Train:
+python -u eval_person_val.py \
+  --backend tv \
+  --model_name fasterrcnn_resnet50_fpn \
+  --list_file ...val.txt \
+  --det_json ...det_val.json \
+  --device mps
+Test:
+python -u eval_person_val.py \
+  --backend tv \
+  --model_name ssdlite320_mobilenet_v3_large \
+  --list_file ...val.txt \
+  --det_json ...det_val.json \
+  --device mps
 ## CLI arguments (core)
 
 * `--list_file`: text file with absolute or relative image paths (one per line)
