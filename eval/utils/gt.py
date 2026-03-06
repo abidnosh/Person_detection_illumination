@@ -7,7 +7,7 @@ from typing import Dict, List, Optional
 
 import numpy as np
 
-_ALLOWED_CATS = {"person", "pedestrian"}
+_ALLOWED_CATS = {"person", "pedestrian", "rider"}
 
 
 def _key_variants(name: str) -> List[str]:

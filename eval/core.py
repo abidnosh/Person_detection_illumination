@@ -1,5 +1,6 @@
 from __future__ import annotations
 from .utils.enhance import Enhancer, EnhancementConfig
+from eval.utils.zerodcepp_runtime import ZeroDCEPP, ZeroDCEPPConfig
 
 import json
 import time
@@ -48,7 +49,22 @@ def run_eval(args) -> None:
     enhancer = None
     if args.enhance_low_conf:
         steps = [s.strip() for s in args.enhance_steps.split(",") if s.strip()]
-        enhancer = Enhancer(EnhancementConfig(steps=steps))
+        learned: list = []  # <-- define it
+        if any(s.lower() in ("zero_dce++", "zero-dce++") for s in steps):
+            if not args.zerodcepp_repo_dir:
+                raise SystemExit("--zerodcepp_repo_dir is required when using zero_dce++")
+            learned.append(
+                ZeroDCEPP(
+                    ZeroDCEPPConfig(
+                        repo_dir=args.zerodcepp_repo_dir,
+                        ckpt_path=args.zerodcepp_ckpt,
+                        device=args.zerodcepp_device,
+                        scale_factor=args.zerodcepp_scale_factor
+                    )
+                )
+            )
+        enhancer = Enhancer(EnhancementConfig(steps=steps), learned=learned)
+        # enhancer = Enhancer(EnhancementConfig(steps=steps))
     cache: Dict[str, CacheEntry] = build_pred_cache(
         images=images,
         gt_index=gt_index,

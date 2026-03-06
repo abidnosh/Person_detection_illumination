@@ -34,5 +34,9 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--save_enhanced_max", type=int, default=50, help="Max images to save.")
     ap.add_argument("--save_enhanced_every", type=int, default=50, help="Save 1 out of N enhanced images.")
     ap.add_argument("--save_enhanced_side_by_side", action="store_true", help="Save original|enhanced collage.")
+    ap.add_argument("--zerodcepp_repo_dir", default="", help="Path to Zero-DCE++ folder that contains model.py")
+    ap.add_argument("--zerodcepp_ckpt", default="", help="Optional path to Epoch99.pth (else uses repo_dir/snapshots_Zero_DCE++/Epoch99.pth)")
+    ap.add_argument("--zerodcepp_device", default="cpu", help="cpu|cuda|mps (default cpu)")
+    ap.add_argument("--zerodcepp_scale_factor", type=int, default=1)
     ap.add_argument("--save_json", default="")
     return ap

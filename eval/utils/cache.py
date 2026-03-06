@@ -78,7 +78,7 @@ def build_pred_cache(
             use_topk_mean: bool = False,
         ) -> bool:
             if scores.size == 0:
-                return False  # no detections => enhance
+                return True  # no detections => enhance
 
             mx = float(scores.max())
             good = int((scores >= good_thr).sum())

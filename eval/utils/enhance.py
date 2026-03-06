@@ -5,6 +5,7 @@ from typing import Callable, List, Sequence
 
 import numpy as np
 from PIL import Image
+from eval.utils.learned_enhancers import LearnedConfig, build_learned_enhancer
 
 try:
     import cv2  # opencv-python
@@ -153,9 +154,10 @@ class Enhancer:
       - optional learned model hooks (not enabled unless you pass them)
     """
 
-    def __init__(self, cfg: EnhancementConfig, learned: List[Callable[[Image.Image], Image.Image]] | None = None) -> None:
+    def __init__(self, cfg: EnhancementConfig, learned: List[Callable[[Image.Image], Image.Image]] | None = None, device: str = "cpu") -> None:
         self.cfg = cfg
         self.learned = learned or []
+        self.device = device
 
     def apply(self, img: Image.Image) -> Image.Image:
         bgr = pil_to_bgr(img)
@@ -182,10 +184,17 @@ class Enhancer:
                     tile_grid_size=int(self.cfg.clahe_grid),
                 )
             elif n in ("zero_dce", "zero-dce", "zero_dce++", "zero-dce++", "dncnn"):
-                # hook point: run learned enhancers on PIL, not numpy
+                # run preloaded learned enhancers (loaded once in core.py)
+                if not self.learned:
+                    raise ValueError(
+                        f"Step '{name}' requested but self.learned is empty. "
+                        "Load learned models once (e.g., Zero-DCE++/DnCNN) in core.py and pass learned=[...] to Enhancer."
+                    )
+
                 pil = bgr_to_pil(bgr)
                 for fn in self.learned:
                     pil = fn(pil)
+                bgr = pil_to_bgr(pil)
                 bgr = pil_to_bgr(pil)
             else:
                 raise ValueError(f"Unknown enhancement step: {name}")
